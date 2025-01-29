@@ -23,8 +23,10 @@ local function runScript()
         elseif pos.X == -1269.9840087890625 and pos.Y == 87 and pos.Z == -399 then
             return "Containers"
         elseif pos.X == -509.0770263671875 and pos.Y == 87 and pos.Z == 758.5009765625 then
-            return "Containers"
-        elseif pos.X == -1709.0770263671875 and pos.Y == 87 and pos.Z == -378.4989929199219 then
+            return "Special"
+        elseif pos.X == -909.9840087890625 and pos.Y == 87 and pos.Z == 673.5009765625 then
+            return "Fighter"
+        elseif pos.X == -1709.0770263671875 and pos.Y == 87.5 and pos.Z == -378.4989929199219 then
             return "Anteiku 2"
         elseif pos.X == -363.0770263671875 and pos.Y == 86 and pos.Z == -1429.4990234375 then
             return "Kagune"
