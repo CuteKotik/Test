@@ -3,8 +3,10 @@ local BossSpawns = NPCSpawns:GetChildren()
 
 for _, spawn in ipairs(BossSpawns) do
     if spawn:IsA("MeshPart") and spawn.Name == "BossSpawn" then
-        local boss = spawn:FindFirstChild(spawn.Name)
-        if boss then
+        -- Получаем всех детей MeshPart
+        local bossChildren = spawn:GetChildren()
+        
+        for _, boss in ipairs(bossChildren) do
             local gui = Instance.new("ScreenGui")
             local frame = Instance.new("Frame")
             local label = Instance.new("TextLabel")
@@ -21,6 +23,7 @@ for _, spawn in ipairs(BossSpawns) do
             label.BackgroundTransparency = 1
             label.Text = boss.Name
             label.TextColor3 = Color3.fromRGB(255, 255, 255)
+            label.TextScaled = true
             label.Parent = frame
             
             local dragToggle = nil
