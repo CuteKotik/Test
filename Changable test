@@ -1,79 +1,83 @@
-local NPCSpawnsFolder = workspace.NPCSpawns
+local function runScript()
+    local NPCSpawnsFolder = workspace.NPCSpawns
 
-local screenGui = Instance.new("ScreenGui")
-screenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+    local screenGui = Instance.new("ScreenGui")
+    screenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
 
-local frame = Instance.new("Frame")
-frame.Size = UDim2.new(0, 200, 0, 300)
-frame.Position = UDim2.new(0.8, 0, 0.5, 0)
-frame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-frame.BorderSizePixel = 0
-frame.Parent = screenGui
+    local frame = Instance.new("Frame")
+    frame.Size = UDim2.new(0, 200, 0, 300)
+    frame.Position = UDim2.new(0.8, 0, 0.5, 0)
+    frame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+    frame.BorderSizePixel = 0
+    frame.Parent = screenGui
 
-local listLayout = Instance.new("UIListLayout")
-listLayout.Parent = frame
-listLayout.Padding = UDim.new(0, 5)
+    local listLayout = Instance.new("UIListLayout")
+    listLayout.Parent = frame
+    listLayout.Padding = UDim.new(0, 5)
 
-local function getLocationFromPosition(pos)
-    if pos.X == -1218.93603515625 and pos.Y == 87 and pos.Z == -787.5 then
-        return "Anteiku"
-    elseif pos.X == -407.5 and pos.Y == 64 and pos.Z == -345 then
-        return "Bridge"
-    elseif pos.X == -1269.9840087890625 and pos.Y == 87 and pos.Z == -399 then
-        return "Containers"
-    elseif pos.X == -509.0770263671875 and pos.Y == 87 and pos.Z == 758.5009765625 then
-        return "Containers"
-    elseif pos.X == -1709.0770263671875 and pos.Y == 87 and pos.Z == -378.4989929199219 then
-        return "Anteiku 2"
-    elseif pos.X == -363.0770263671875 and pos.Y == 86 and pos.Z == -1429.4990234375 then
-        return "Kagune"
+    local function getLocationFromPosition(pos)
+        if pos.X == -1218.93603515625 and pos.Y == 87 and pos.Z == -787.5 then
+            return "Anteiku"
+        elseif pos.X == -407.5 and pos.Y == 64 and pos.Z == -345 then
+            return "Bridge"
+        elseif pos.X == -1269.9840087890625 and pos.Y == 87 and pos.Z == -399 then
+            return "Containers"
+        elseif pos.X == -509.0770263671875 and pos.Y == 87 and pos.Z == 758.5009765625 then
+            return "Containers"
+        elseif pos.X == -1709.0770263671875 and pos.Y == 87 and pos.Z == -378.4989929199219 then
+            return "Anteiku 2"
+        elseif pos.X == -363.0770263671875 and pos.Y == 86 and pos.Z == -1429.4990234375 then
+            return "Kagune"
+        end
+        return ""
     end
-    return ""
+
+    local bossLabels = {}
+
+    local function createBossLabel(bossSpawn)
+        local bossModel = bossSpawn:FindFirstChild("Model") or bossSpawn:FindFirstChildWhichIsA("Model")
+        if bossModel then
+            local nameLabel = Instance.new("TextLabel")
+            nameLabel.Size = UDim2.new(1, -10, 0, 25)
+            nameLabel.Position = UDim2.new(0, 5, 0, 5)
+            nameLabel.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+            nameLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+            
+            local location = getLocationFromPosition(bossSpawn.Position)
+            nameLabel.Text = bossModel.Name .. " " .. location
+            nameLabel.Parent = frame
+            
+            bossLabels[bossSpawn] = nameLabel
+            
+            bossModel.AncestryChanged:Connect(function(_, parent)
+                if not parent then
+                    nameLabel:Destroy()
+                    bossLabels[bossSpawn] = nil
+                end
+            end)
+        end
+    end
+
+    -- Initial setup
+    for _, bossSpawn in pairs(NPCSpawnsFolder:GetChildren()) do
+        if bossSpawn.Name == "BossSpawn" then
+            createBossLabel(bossSpawn)
+        end
+    end
+
+    -- Monitor for new bosses
+    local connection = NPCSpawnsFolder.ChildAdded:Connect(function(child)
+        if child.Name == "BossSpawn" then
+            createBossLabel(child)
+        end
+    end)
+
+    return screenGui, connection
 end
 
-local bossLabels = {}
-
-local function createBossLabel(bossSpawn)
-    local bossModel = bossSpawn:FindFirstChild("Model") or bossSpawn:FindFirstChildWhichIsA("Model")
-    if bossModel then
-        local nameLabel = Instance.new("TextLabel")
-        nameLabel.Size = UDim2.new(1, -10, 0, 25)
-        nameLabel.Position = UDim2.new(0, 5, 0, 5)
-        nameLabel.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-        nameLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-        
-        local location = getLocationFromPosition(bossSpawn.Position)
-        nameLabel.Text = bossModel.Name .. " " .. location
-        nameLabel.Parent = frame
-        
-        bossLabels[bossSpawn] = nameLabel
-        
-        bossModel.AncestryChanged:Connect(function(_, parent)
-            if not parent then
-                nameLabel:Destroy()
-                bossLabels[bossSpawn] = nil
-            end
-        end)
-
-        -- Следим за появлением нового Model в BossSpawn
-        bossSpawn.ChildAdded:Connect(function(child)
-            if child:IsA("Model") then
-                nameLabel.Text = child.Name .. " " .. location
-            end
-        end)
-    end
+while true do
+    local gui, connection = runScript()
+    task.wait(0.001) -- Wait for 1 millisecond
+    if gui then gui:Destroy() end
+    if connection then connection:Disconnect() end
 end
-
--- Initial setup
-for _, bossSpawn in pairs(NPCSpawnsFolder:GetChildren()) do
-    if bossSpawn.Name == "BossSpawn" then
-        createBossLabel(bossSpawn)
-    end
-end
-
--- Monitor for new bosses
-NPCSpawnsFolder.ChildAdded:Connect(function(child)
-    if child.Name == "BossSpawn" then
-        createBossLabel(child)
-    end
-end)
