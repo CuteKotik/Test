@@ -1,4 +1,4 @@
-local arguments = {
+local args = {
     [1] = "\230\147\141\228\189\160\240\159\146\166\240\159\146\148\240\159\141\145\240\159\145\140\240\159\146" ..
         "\166\230\147\141\228\189\160\240\159\146\166\240\159\146\148\240\159\141\145\240\159\145" ..
         "\140\240\159\146\166\240\159\146\148\240\159\141\145\240\159\145\140\240\159\146\166" ..
@@ -11,6 +11,4 @@ local arguments = {
     [7] = Vector3.new(-527.992431640625, 65.24749755859375, 1009.499755859375)
 }
 
-local player = game:GetService("Players").LocalPlayer
-local character = player.Character
-character.Remotes.KeyEvent:FireServer(unpack(arguments))
+game:GetService("Players").LocalPlayer.Character.Remotes.KeyEvent:FireServer(unpack(args))
