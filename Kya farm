@@ -1,6 +1,9 @@
-local ohString1 = "操你💦💔🍑👌💦操你💦💔🍑👌💦💔🍑👌💦💔🍑👌💔🍑👌💦💔🍑👌"
-local ohString2 = "One"
-local ohString3 = "Down"
-local ohCFrame4 = CFrame.new(-517.992065, 61.5, 1008.93158, 0.0938394219, 0.224134326, -0.970029891, -1.86264515e-09, 0.974329293, 0.225127742, 0.995587349, -0.0211258549, 0.0914304927)
+if team == "CCG" then else end
 
-workspace.gold902341.Remotes.KeyEvent:FireServer(ohString1, ohString2, ohString3, ohCFrame4)
+array.stage = "One"
+
+pcall(function()
+            if player.Character.Humanoid.Health > 0 and player.Character.HumanoidRootPart and player.Character.Remotes.KeyEvent then
+                if not findobj(player.Character, "Kagune") and not findobj(player.Character, "Quinque")  then
+                    pressKey(array.stage)
+                end
