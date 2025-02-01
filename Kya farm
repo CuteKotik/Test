@@ -1,15 +1,60 @@
 local args = {
-    [1] = "\230\147\141\228\189\160\240\159\146\166\240\159\146\148\240\159\141\145\240\159\145\140\240\159\146" ..
-        "\166\230\147\141\228\189\160\240\159\146\166\240\159\146\148\240\159\141\145\240\159\145" ..
-        "\140\240\159\146\166\240\159\146\148\240\159\141\145\240\159\145\140\240\159\146\166" ..
-        "\240\159\146\148\240\159\141\145\240\159\145\140\240\159\146\148\240\159\141\145\240\159" ..
-        "\145\140\240\159\146\166\240\159\146\148\240\159\141\145\240\159\145\140",
-    [2] = "One",
-    [3] = "Down",
-    [4] = CFrame.new(-476.8180847167969, 61.5, 1022.580810546875, -0.5072060227394104, 0.4383225739002228, -0.7420347332954407, -0, 0.8610041737556458, 0.5085982084274292, 0.8618248701095581, 0.2579640746116638, -0.43670645356178284),
-    [6] = CFrame.new(-499.2393493652344, 76.86775207519531, 1009.3856811523438, 0.19080844521522522, 0.428449422121048, -0.8831893801689148, -7.450580596923828e-09, 0.8997197151184082, 0.4364685118198395, 0.981627345085144, -0.08328186720609665, 0.17167408764362335),
-    [7] = Vector3.new(-481.7963562011719, 65.24749755859375, 1005.9951171875)
+    [1] = "gold300100"
 }
 
-game:GetService("Players").LocalPlayer.Character.Remotes.KeyEvent:FireServer(unpack(args))
-game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Evolutions"):WaitForChild("GetInfo"):InvokeServer()
+game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Ally"):WaitForChild("ToggleAlly"):InvokeServer(unpack(args))
+
+local Players = game:GetService("Players")
+local TweenService = game:GetService("TweenService")
+
+-- Получаем локального игрока (ваш персонаж)
+local player = Players.LocalPlayer
+local character
+local humanoidRootPart
+
+-- Функция для обновления ссылок на персонажа
+local function updateCharacterReferences()
+    character = player.Character
+    if character then
+        humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+    end
+end
+
+-- Инициализация и обработка появления нового персонажа
+updateCharacterReferences()
+player.CharacterAdded:Connect(updateCharacterReferences)
+
+-- Функция для поиска целевого игрока
+local function findTargetPlayer()
+    return Players:FindFirstChild("gold300100")
+end
+
+-- Настройки для TweenService
+local tweenInfo = TweenInfo.new(
+    0.1, -- Время движения
+    Enum.EasingStyle.Linear, -- Стиль движения
+    Enum.EasingDirection.Out, -- Направление движения
+    0, -- Повторений
+    false, -- Реверс
+    0 -- Задержка
+)
+
+-- Основной цикл преследования
+game:GetService("RunService").Heartbeat:Connect(function()
+    local targetPlayer = findTargetPlayer()
+    
+    if targetPlayer and targetPlayer.Character and character and humanoidRootPart then
+        local targetRoot = targetPlayer.Character:FindFirstChild("HumanoidRootPart")
+        
+        if targetRoot then
+            -- Создаем новые параметры для перемещения
+            local tweenGoal = {
+                CFrame = targetRoot.CFrame
+            }
+            
+            -- Создаем и запускаем анимацию движения
+            local tween = TweenService:Create(humanoidRootPart, tweenInfo, tweenGoal)
+            tween:Play()
+        end
+    end
+end)
