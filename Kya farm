@@ -1,12 +1,6 @@
-local function pressKey(topress)
-    fire(player.Character.Remotes.KeyEvent, key, topress, "Down", player:GetMouse().Hit, nil, workspace.Camera.CFrame)
-end
+local ohString1 = "操你💦💔🍑👌💦操你💦💔🍑👌💦💔🍑👌💦💔🍑👌💔🍑👌💦💔🍑👌"
+local ohString2 = "One"
+local ohString3 = "Down"
+local ohCFrame4 = CFrame.new(-517.992065, 61.5, 1008.93158, 0.0938394219, 0.224134326, -0.970029891, -1.86264515e-09, 0.974329293, 0.225127742, 0.995587349, -0.0211258549, 0.0914304927)
 
-while true do
-    if array.autofarm then
-        if player.PlayerFolder.CanAct.Value then
-            pressKey("Mouse1")
-        end
-    end
-    wait()
-end
+workspace.gold902341.Remotes.KeyEvent:FireServer(ohString1, ohString2, ohString3, ohCFrame4)
