@@ -445,7 +445,7 @@ end
 
 -- auto farm
 while true do
-    if array.autofarm then
+    if not array.autofarm then
         pcall(function()
             if player.Character.Humanoid.Health > 0 and player.Character.HumanoidRootPart and player.Character.Remotes.KeyEvent then
                 if not findobj(player.Character, "Kagune") and not findobj(player.Character, "Quinque")  then
