@@ -1,8 +1,11 @@
 while true do
     if player.Character.Humanoid.Health > 0 and player.Character.HumanoidRootPart and player.Character.Remotes.KeyEvent then
-        if not findobj(player.Character, "Kagune") then
+        if not findobj(player.Character, "Kagune") and not findobj(player.Character, "Quinque") then
             pressKey("One")
         end
+    else
+        labels("text", "Waiting for character to respawn")
+        array.died = true
     end
     wait()
 end
